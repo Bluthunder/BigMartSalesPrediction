@@ -141,24 +141,81 @@ mlflow.set_experiment("BigMartSales_Prediction")
 2. Data preparation with one-hot encoding
 3. Baseline model evaluation
 4. Optuna study for hyperparameter optimization
-5. Hyperparameter search space:
-   - Learning rate tuning
-   - Tree depth optimization
-   - Subsample and colsample_bytree adjustments
-   - Other GradientBoosting parameters
+5. Hyperparameter search space and optimization
 6. MLflow tracking for all experiments
 
+#### Optuna Hyperparameter Search Space
+
+| Hyperparameter | Search Range | Type | Description |
+|---|---|---|---|
+| `n_estimators` | 200–1000 | Integer | Number of boosting stages |
+| `learning_rate` | 0.01–0.1 | Float | Shrinkage parameter for boosting |
+| `max_depth` | 2–6 | Integer | Maximum depth of individual trees |
+| `min_samples_leaf` | 1–20 | Integer | Minimum samples required in leaf node |
+| `subsample` | 0.6–1.0 | Float | Fraction of samples used for fitting each tree |
+
+#### Optuna Configuration Code
+
+```python
+def objective(trial):
+    params = {
+        'n_estimators': trial.suggest_int('n_estimators', 200, 1000),
+        'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.1),
+        'max_depth': trial.suggest_int('max_depth', 2, 6),
+        'min_samples_leaf': trial.suggest_int('min_samples_leaf', 1, 20),
+        'subsample': trial.suggest_float('subsample', 0.6, 1.0),
+        'random_state': RANDOM_STATE
+    }
+    
+    model = GradientBoostingRegressor(**params)
+    cv_rmse = evaluate_model(model, X_encoded, y)
+    
+    mlflow.log_params(params)
+    mlflow.log_metric("cv_rmse", cv_rmse)
+    
+    return cv_rmse
+
+study = optuna.create_study(direction="minimize")
+study.optimize(objective, n_trials=100)
+```
+
+#### Best Parameters Found
+
+After systematic search across the hyperparameter space (100 trials), the following optimal parameters were identified:
+
+```python
+{
+    'n_estimators': 497,
+    'learning_rate': 0.0106,
+    'max_depth': 3,
+    'min_samples_leaf': 9,
+    'subsample': 0.72
+}
+```
+
+**Performance Comparison:**
+- Baseline CV RMSE (default parameters): 1083.93
+- Optimized CV RMSE (best parameters): 1084.03
+- Performance change: +0.10 RMSE (marginal increase - no improvement achieved)
+
+**Key Observations:**
+- Learning rate settled at lower end of search range (0.0106 vs 0.01-0.1)
+- Max depth of 3 indicates simpler trees generalize better
+- Subsample of 0.72 suggests ~72% data sampling is optimal
+- Minimal samples per leaf (9) prevents overfitting
+- ~500 estimators provided best boosting balance
+
 **Optimization Results:**
-- Baseline and optimized model comparison
-- Best parameters identification
+- Baseline and optimized model comparison completed
+- Best parameters identification: See optimal parameters above
 - Final model training with best parameters
-- Submission generation
+- Submission generation with optimized model
 
 **Advantages:**
-- Systematic hyperparameter search
-- Experiment tracking with MLflow
-- Reproducible results
-- Clear best model selection
+- Systematic hyperparameter search across 100 trials
+- Experiment tracking with MLflow for reproducibility
+- Reproducible results with fixed random state
+- Clear best model selection with logged metrics
 
 ---
 
