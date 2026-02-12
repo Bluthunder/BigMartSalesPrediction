@@ -1,0 +1,122 @@
+# Data Files
+Data/raw/
+*.xlsx
+*.xls
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+.jupyter/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+.virtualenv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# MLflow & Experiment Tracking
+mlruns/
+.mlflow/
+
+# Optuna
+.optuna/
+optuna_study.db
+optuna_*.db
+
+# Model & Pickle Files
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.keras
+*.model
+
+# Logs
+*.log
+logs/
+
+# OS Files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# Python Coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# IPython
+.ipython/
+.ipython_profile/
+.ipykernel/
+
+# Spyder
+.spyproject
+.spyderproject
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Testing
+.tox/
+.hypothesis/
+
+# Dependencies Lock (optional - uncomment if needed)
+# Pipfile.lock
+# poetry.lock
+
+# Large Model Files
+models/
+*.pt
+*.pth
+*.pb
+
+# Temporary Directories
+tmp/
+temp/
+.tmp/
+
+# Keep Data Structure (uncomment to track raw data)
+# !Data/raw/.gitkeep
+# !Submissions/.gitkeep
+# !Notebooks/.gitkeep
+# !Py/.gitkeep
