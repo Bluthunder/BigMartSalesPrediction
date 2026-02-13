@@ -2,7 +2,7 @@
 
 A comprehensive machine learning project to predict sales for BigMart outlets across different locations and item types using advanced feature engineering and hyperparameter optimization techniques.
 
-## 📋 Project Overview
+## Project Overview
 
 This project involves predicting the sales of items across different BigMart outlets. The dataset contains information about items, outlets, and their characteristics. The goal is to build a robust regression model that accurately forecasts item outlet sales.
 
@@ -11,35 +11,43 @@ This project involves predicting the sales of items across different BigMart out
 **Model:** GradientBoostingRegressor  
 **Evaluation Metric:** RMSE (Root Mean Squared Error)
 
-## 📁 Project Structure
+## Project Structure
+
 
 ```
 BigMartSalesPrediction/
 ├── Data/
 │   ├── raw/
-│   │   ├── train_v9rqX0R.csv      # Training dataset
-│   │   └── test_AbJTz2l.csv       # Test dataset (for predictions)
+│   │   ├── train_v9rqX0R.csv
+│   │   └── test_AbJTz2l.csv
 │   └── sample_submission_8RXa3c6.csv
 ├── Notebooks/
-│   ├── Analysis_Notebook1.ipynb           # EDA and data exploration
-│   ├── BigMartSales_2.ipynb               # Baseline model
-│   ├── BigMartSales_3.ipynb               # Model refinement
-│   ├── BigMartSales_4.ipynb               # Advanced features
-│   ├── BigMartSales_5(MLflow+Optuna).ipynb # Hyperparameter optimization
-│   └── BigMartSales_6(FE).ipynb          # Advanced feature engineering
+│   ├── Analysis_Notebook1.ipynb
+│   ├── BigMartSales_2.ipynb
+│   ├── BigMartSales_3.ipynb
+│   ├── BigMartSales_4.ipynb
+│   ├── BigMartSales_5(MLflow+Optuna).ipynb
+│   ├── BigMartSales_6(FE).ipynb
+│   ├── BigMartSales_7(Log).ipynb
+│   └── BigMartSales_v8(XGB).ipynb
 ├── Py/
-│   ├── bigmartsales_2.py          # Python version of Notebook 2
-│   ├── bigmartsales_3.py          # Python version of Notebook 3
-│   ├── bigmartsales_5(mlflow+optuna).py  # Python version of Notebook 5
-│   └── bigmartsales_6(fe).py      # Python version of Notebook 6
+│   ├── bigmartsales_2.py
+│   ├── bigmartsales_3.py
+│   ├── bigmartsales_5(mlflow+optuna).py
+│   ├── bigmartsales_6(fe).py
+│   ├── bigmartsales_7(log).py
+│   └── bigmartsales_v8(xgb).py
 ├── Submissions/
-│   ├── bigmart_submission_v1.csv  # Initial submission
-│   ├── bigmart_submission_v2.csv  # Refined submission
-│   ├── bigmart_submission_v3.csv  # Advanced features submission
-│   └── bigmart_submission_v4.csv  # Latest submission
-├── NOTEBOOKS_COMPARISON.md        # Detailed comparison of all notebooks
-├── README.md                      # This file
-└── .gitignore                     # Git ignore file
+│   ├── bigmart_submission_v1.csv
+│   ├── bigmart_submission_v2.csv
+│   ├── bigmart_submission_v3.csv
+│   ├── bigmart_submission_v4.csv
+│   ├── bigmart_submission_v5.csv
+│   └── bigmart_submission_v6.csv
+├── Progress_Documentation.md
+├── NOTEBOOKS_COMPARISON.md
+├── README.md
+└── .gitignore
 ```
 
 ## 🔍 Dataset Overview
@@ -358,5 +366,6 @@ This project is part of a data science learning initiative.
 
 ---
 
-**Last Updated:** February 12, 2026  
-**Latest Version:** BigMartSales_6(FE) with K-Fold Target Encoding
+**Last Updated:** February 13, 2026  
+**Latest Version:** BigMartSales_8(XGB) with K-Fold Target Encoding
+**Best Version:** BigMartSales_6(FE)
