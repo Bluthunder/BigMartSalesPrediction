@@ -106,7 +106,7 @@ python Py/bigmartsales_6\(fe\).py
 
 ## 📊 Notebooks Guide
 
-### Phase 1: Exploratory Data Analysis
+### Phase 1: Exploratory Data Analysis & Model Comparison
 **Notebook:** `Analysis_Notebook1.ipynb`
 - Data loading and inspection
 - Statistical summaries
@@ -114,6 +114,14 @@ python Py/bigmartsales_6\(fe\).py
 - Missing data assessment
 - Correlation analysis
 - Visualization of key patterns
+- **Comprehensive Model Comparison:**
+  - Linear Regression (RMSE: ~1065)
+  - Ridge Regression (RMSE: 1070.36)
+  - Lasso Regression (RMSE: 1070.06)
+  - RandomForestRegressor
+  - **XGBoost (XGBRegressor)**
+  - **LightGBM** (gradient boosting)
+- Model evaluation and selection process
 
 ### Phase 2: Baseline Model
 **Notebook:** `BigMartSales_2.ipynb`
@@ -145,6 +153,7 @@ python Py/bigmartsales_6\(fe\).py
 - Optimized CV RMSE: 1084.03
 - Experiment reproducibility with MLflow
 
+
 ### Phase 6: Advanced Feature Engineering
 **Notebook:** `BigMartSales_6(FE).ipynb`
 - **Key Innovation:** K-Fold Target Encoding
@@ -153,6 +162,22 @@ python Py/bigmartsales_6\(fe\).py
 - Interaction features (Item_Type + Outlet_Type)
 - Sophisticated feature representation
 - Latest and most mature approach
+
+### Phase 7: Log-Target Modeling & Experiment Tracking
+**Notebook:** `BigMartSales_7(Log).ipynb`
+
+### Phase 8: XGBoost Modeling & Staged Optimization
+**Notebook:** `BigMartSales_v8(XGB).ipynb`
+- **Key Innovation:** Staged Optuna optimization (learning rate/depth, then regularization)
+- Advanced feature engineering pipeline (vectorized operations, missing value imputation, visibility ratio, MRP binning, interaction features, binary encoding)
+- K-Fold target encoding for categorical variables
+- XGBoostRegressor as primary model
+- MLflow experiment tracking (baseline, staged Optuna, final model)
+- Improved error handling and validation checks
+- Submission generated with best Optuna parameters and XGBoost predictions
+- Enhanced model robustness and experiment reproducibility
+
+
 
 ## 🔧 Key Techniques & Strategies
 
@@ -175,13 +200,21 @@ python Py/bigmartsales_6\(fe\).py
 
 ### Model Configuration
 
-**Algorithm:** GradientBoostingRegressor
+**Primary Algorithm:** GradientBoostingRegressor (selected from Notebook 1 model comparison)
 
-**Key Hyperparameters (from Optuna optimization):**
-- Learning rate: Tuned via Optuna
-- Max depth: Optimized for tree complexity
-- Subsample & colsample_bytree: Regularization parameters
-- Number of estimators: Optimized boosting iterations
+**Algorithm Selection Rationale:**
+- Evaluated multiple algorithms in Analysis_Notebook1 (Linear, Ridge, Lasso, RandomForest, XGBoost, LightGBM)
+- GradientBoosting selected for optimal balance of performance and interpretability
+- Outperformed linear models (Linear: ~1065, Ridge: 1070.36, Lasso: 1070.06)
+- Comparable performance to XGBoost with better model stability
+- Selected over LightGBM based on dataset characteristics
+
+**Key Hyperparameters (from Optuna optimization - 100 trials):**
+- Learning rate: 0.0106 (search range: 0.01-0.1)
+- Max depth: 3 (search range: 2-6)
+- Subsample: 0.72 (search range: 0.6-1.0)
+- Min samples leaf: 9 (search range: 1-20)
+- Number of estimators: 497 (search range: 200-1000)
 
 **Validation Strategy:**
 - K-Fold Cross-Validation (n_splits=5)
@@ -191,22 +224,41 @@ python Py/bigmartsales_6\(fe\).py
 ## 📈 Performance Evolution
 
 | Version | Notebook | Approach | CV RMSE | Key Feature |
-|---------|----------|----------|---------|------------|
-| v1 | BigMartSales_2 | Baseline | 1082.58 | Standard preprocessing |
-| v2 | BigMartSales_3 | Refined | 0.9289 (Log Scale) | Enhanced pipeline |
-| v3 | BigMartSales_4 | Advanced Features | 1204.02 | Rich feature set |
-| v4 | BigMartSales_5 | Optuna + MLflow | 1084.03 | Hyperparameter tuning |
-| v5 | BigMartSales_6 | K-Fold Target Encoding | 1095.31 | Advanced FE |
+|---------|----------|-------------------------------|---------|-----------------------------|
+| v1 | BigMartSales_2 | Baseline                      | 1082.58 | Standard preprocessing      |
+| v2 | BigMartSales_3 | Refined                       | 0.9289 (Log Scale) | Enhanced pipeline         |
+| v3 | BigMartSales_4 | Advanced Features             | 1204.02 | Rich feature set            |
+| v4 | BigMartSales_5 | Optuna + MLflow               | 1084.03 | Hyperparameter tuning       |
+| v5 | BigMartSales_6 | K-Fold Target Encoding        | 1095.31 | Advanced FE                 |
+| v6 | BigMartSales_7(Log) | Log-Target + Optuna + MLflow | 1157   | Log-target transformation, robust FE |
+| v7 | BigMartSales_v8(XGB) | XGBoost + Staged Optuna + MLflow | 1098.66 | Staged Optuna, XGBoost, advanced FE |
 
 ## 🎯 Model Performance Insights
 
-**Key Finding:** Feature engineering yielded greater performance improvements than hyperparameter tuning alone.
+**Algorithm Comparison Results (Analysis_Notebook1):**
+- Linear Regression: ~1065 RMSE
+- Ridge Regression: 1070.36 RMSE
+- Lasso Regression: 1070.06 RMSE
+- RandomForestRegressor: Tested
+- XGBoost: Evaluated and installed
+- LightGBM: Evaluated and installed
+- **GradientBoosting: Selected (~1082.58 RMSE)**
 
-- **Baseline RMSE:** 1082.58 (BigMartSales_2)
-- **With Optuna Optimization:** 1084.03 (minimal improvement of ~1.45)
-- **With Advanced FE:** Focus shifted to K-Fold target encoding and sophisticated features
+**Performance Progression:**
+- **Baseline RMSE (GradientBoosting):** 1082.58 (BigMartSales_2)
+- **With Optuna Optimization:** 1084.03 (marginal gain of +1.45)
+- **With K-Fold Target Encoding:** ~1095.31 (focus shifted to feature engineering)
 
-**Recommendation:** Prioritize feature quality over hyperparameter fine-tuning for this problem.
+**Key Findings:**
+1. GradientBoosting emerged as superior from comprehensive model comparison
+2. Feature engineering > Hyperparameter tuning (Optuna optimization provided minimal improvement)
+3. K-Fold Target Encoding (Notebook 6) more impactful than hyperparameter optimization (Notebook 5)
+4. Linear models significantly outperformed (Ridge: 1070.36 < GradientBoosting: 1082.58)
+
+**Recommendations:** 
+- Prioritize feature quality and engineering over hyperparameter fine-tuning
+- GradientBoosting provides optimal performance-stability tradeoff for this regression problem
+- Consider ensemble methods combining insights from multiple algorithms for potential improvements
 
 ## 📚 Tools & Libraries
 
@@ -297,15 +349,8 @@ For an in-depth comparison of all notebooks and their strategies, see [NOTEBOOKS
 
 - [ ] Ensemble methods combining multiple model types
 - [ ] Systematic feature selection and importance analysis
-- [ ] Advanced encoding techniques (WOE, Helmert encoding)
-- [ ] Cross-validation with alternative algorithms (XGBoost, LightGBM)
 - [ ] Stacking meta-models for improved predictions
 - [ ] Domain-specific feature engineering
-- [ ] Anomaly detection and outlier treatment
-
-## 📞 Contact & Support
-
-For questions or improvements, please refer to the project documentation or reach out through the repository.
 
 ## 📄 License
 

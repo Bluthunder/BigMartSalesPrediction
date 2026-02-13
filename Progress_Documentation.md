@@ -17,25 +17,27 @@ This document provides a comprehensive comparison of the six notebooks used in t
 
 ## Notebooks Summary
 
-| Notebook | Focus Area | Key Features | Status |
-|----------|-----------|--------------|--------|
-| **Analysis_Notebook1** | Exploratory Data Analysis (EDA) | Data exploration, visualization, statistics | Foundation |
-| **BigMartSales_2** | Baseline Modeling | GradientBoosting, basic feature engineering | Baseline |
-| **BigMartSales_3** | Model Refinement | Enhanced feature engineering, similar architecture | Refinement |
-| **BigMartSales_4** | Advanced Features | Additional engineered features, visualization | Advanced |
-| **BigMartSales_5 (MLflow+Optuna)** | Hyperparameter Optimization | Optuna for tuning, MLflow for tracking | Optimization |
-| **BigMartSales_6 (FE)** | Advanced Feature Engineering | K-Fold Target Encoding, enhanced preprocessing | Latest |
+| Notebook | Model | Key Features | Optimization | Tracking | Submission |
+|----------|-------|-------------|-------------|----------|------------|
+| Analysis_Notebook1 | Multiple (GB, XGB, LGBM, Linear, Ridge, Lasso, RF) | EDA, model comparison | Manual | None | No |
+| BigMartSales_2 | GradientBoostingRegressor | Baseline FE, CV | Manual | None | Yes |
+| BigMartSales_3 | GradientBoostingRegressor | Refined FE, CV | Manual | None | Yes |
+| BigMartSales_4 | GradientBoostingRegressor | Advanced FE, interactions | Manual | None | Yes |
+| BigMartSales_5(MLflow+Optuna) | GradientBoostingRegressor | Optuna HPO, MLflow | Optuna | MLflow | Yes |
+| BigMartSales_6(FE) | GradientBoostingRegressor | K-Fold Target Encoding, advanced FE | Optuna | MLflow | Yes |
+| BigMartSales_7(Log) | GradientBoostingRegressor | Log-target, advanced FE, K-Fold encoding | Optuna | MLflow | Yes |
+| BigMartSales_v8(XGB) | XGBoostRegressor | Advanced FE, K-Fold encoding, staged Optuna | Optuna (2-stage) | MLflow | Yes |
 
 ---
 
 ## Detailed Comparison
 
-### 1. **Analysis_Notebook1.ipynb** - Exploratory Data Analysis
-**Purpose:** Initial data exploration and understanding
+### 1. **Analysis_Notebook1.ipynb** - Exploratory Data Analysis & Model Comparison
+**Purpose:** Initial data exploration and comprehensive model algorithm comparison
 
 **Key Characteristics:**
-- **Libraries Used:** pandas, numpy, matplotlib, seaborn, sklearn
-- **Main Focus:** EDA and statistical analysis
+- **Libraries Used:** pandas, numpy, matplotlib, seaborn, sklearn, xgboost, lightgbm
+- **Main Focus:** EDA and comprehensive model evaluation
 - **Activities:**
   - Loading and inspecting train/test datasets
   - Data shape and structure analysis (`train_df.info()`, `train_df.describe()`)
@@ -46,9 +48,20 @@ This document provides a comprehensive comparison of the six notebooks used in t
   - Categorical variable analysis
   - Missing data assessment
 
+**Model Algorithms Evaluated:**
+- **Linear Regression** - Baseline linear model (RMSE: ~1065)
+- **Ridge Regression** - L2 regularized linear model (RMSE: 1070.36)
+- **Lasso Regression** - L1 regularized linear model (RMSE: 1070.06)
+- **RandomForestRegressor** - Tree ensemble approach
+- **XGBoost (XGBRegressor)** - Installed and evaluated
+- **LightGBM** - Installed and evaluated
+- **GradientBoosting** - Selected as primary algorithm
+
 **Output:**
-- Visualizations and insights to inform feature engineering
-- Foundation for subsequent modeling notebooks
+- Visualizations and insights for feature engineering
+- Model comparison results and algorithm selection
+- Foundation for subsequent optimization notebooks
+- Selection of GradientBoosting as optimal algorithm based on comprehensive evaluation
 
 ---
 
@@ -223,10 +236,40 @@ After systematic search across the hyperparameter space (100 trials), the follow
 **Purpose:** Focus on sophisticated feature engineering with K-Fold Target Encoding
 
 **Key Characteristics:**
-- **Dependencies:** optuna, mlflow
-- **CV Strategy:** KFold (standard implementation)
-- **Advanced Technique:** K-Fold Target Encoding
-- **Model:** GradientBoostingRegressor
+
+---
+
+### 7. **BigMartSales_7(Log).ipynb** – Log-Target Modeling & Experiment Tracking
+**Purpose:** Improve RMSE stability and experiment tracking using log-transformed target and Optuna+MLflow integration
+
+**Key Characteristics:**
+- **Model:** GradientBoostingRegressor (log-target)
+- **Target Transformation:** $\log(1 + y)$ for improved RMSE
+- **Feature Engineering:**
+    - Missing value imputation (Item_Weight, Item_Visibility)
+    - Visibility ratio, MRP binning, interaction features
+    - Binary encoding for fat content
+- **Encoding:** K-Fold target encoding for categorical variables
+- **Hyperparameter Optimization:** Optuna (n_estimators, learning_rate, max_depth, min_samples_leaf, subsample)
+- **Experiment Tracking:** MLflow (baseline and Optuna runs)
+- **Submission:** Predictions generated with best Optuna parameters, log-target inverse transform
+
+**Workflow:**
+1. Feature engineering pipeline
+2. K-Fold target encoding
+3. Log-target transformation
+4. Baseline MLflow run
+5. Optuna study for hyperparameter optimization (MLflow nested runs)
+6. Final model training and submission
+
+**Key Innovations:**
+- Log-target transformation for improved RMSE
+- MLflow integration for systematic experiment tracking
+- Optuna for robust hyperparameter search
+
+**Performance:**
+- Leaderboard score logged in MLflow
+- Submission file generated with log-target predictions
 
 **Advanced Feature Engineering:**
 ```python
@@ -304,24 +347,57 @@ The K-Fold Target Encoding approach is more sophisticated than standard one-hot 
 - **Techniques:** K-Fold Target Encoding, sophisticated preprocessing
 - **Key Achievement:** Reduced dimensionality with information preservation
 
+### Phase 7: Target Log Transform (BigMartSale_7)
+- **Goal:** Handle slight rightly skewed target distribution 
+- **Output:** Not much improvement in CV RMSE
+- **Technique:** y_log = np.log1p(y)
+
+### Phase 8: Using XGBoost over gradient boosted tree.
+- **Goal:** Improve RMSE score 
+- **Output:** Slight Improvement in RMSE
+- **Techique:** Used XGB Regressor and two stage hyper parameter optimization
+
 ---
 
 ## Performance Metrics
 
-### RMSE Progression
+### Algorithm Comparison (Analysis_Notebook1)
 
-| Notebook | Model | CV RMSE | Notes |
-|----------|-------|---------|-------|
+| Algorithm | RMSE | Notes |
+|-----------|------|-------|
+| Linear Regression | ~1065 | Baseline linear model |
+| Ridge Regression | 1070.36 | L2 regularization |
+| Lasso Regression | 1070.06 | L1 regularization |
+| RandomForestRegressor | Tested | Tree ensemble |
+| XGBoost | Evaluated | Installed for comparison |
+| LightGBM | Evaluated | Installed for comparison |
+| **GradientBoosting** | **~1082.58** | **Selected as optimal** |
+
+**Algorithm Selection Insights:**
+- Linear models (Ridge: 1070.36, Lasso: 1070.06) provided comparable RMSE
+- GradientBoosting selected for better generalization and feature importance
+- XGBoost and LightGBM evaluated but GradientBoosting chosen for stability
+- Decision to focus on GradientBoosting optimization rather than model switching
+
+### RMSE Progression (GradientBoosting Notebooks)
+
+| Notebook | Model Configuration | CV RMSE | Strategy |
+|----------|---------------------|---------|----------|
+| Analysis_Notebook1 | Model Comparison | Various | Algorithm evaluation |
 | BigMartSales_2 | GradientBoosting (Baseline) | 1082.58 | Baseline performance |
-| BigMartSales_3 | GradientBoosting (Refined) | 0.9289 (Log Scale) | Expected improvement |
-| BigMartSales_4 | GradientBoosting (Advanced) | 1204.02 | Advanced features |
-| BigMartSales_5 | GradientBoosting (Baseline) | 1083.93 | Baseline in Optuna study |
-| BigMartSales_5 | GradientBoosting (Optimized) | 1084.03 | After Optuna tuning |
-| BigMartSales_6 | GradientBoosting (FE Focus) | 1095.31 | With advanced encoding |
+| BigMartSales_3 | GradientBoosting (Refined) | 0.9289 (Log Scale) | Enhanced preprocessing |
+| BigMartSales_4 | GradientBoosting (Advanced FE) | 1204.02 | Rich feature engineering |
+| BigMartSales_5 (Baseline) | GradientBoosting (Default) | 1083.93 | Pre-optimization baseline |
+| BigMartSales_5 (Optimized) | GradientBoosting (Optuna) | 1084.03 | Hyperparameter tuning |
+| BigMartSales_6 | GradientBoosting (K-Fold Encoding) | 1095.31 | Advanced target encoding |
+| BigMartSales_7 | GradientBoosting (Target Log Transform) | 1157 | Target Log Transform |
+| BigMartSales_8 | XGBBoost | 1098.99 | XGBBoost
 
-**Observations:**
-- Baseline RMSE is relatively stable (~1082-1084)
-- Optuna optimization did not significantly improve RMSE (marginal change)
+**Key Observations:**
+- Algorithm comparison informed decision to focus on GradientBoosting
+- Baseline RMSE stable around 1082-1084 across notebooks
+- Optuna optimization yielded minimal improvement (+1.45 RMSE)
+- Feature engineering (K-Fold Target Encoding) proved more impactful than hyperparameter tuning
 - Focus shifted from hyperparameter tuning to feature engineering
 - Latest approach (Notebook 6) emphasizes feature quality over hyperparameter tuning
 
@@ -371,6 +447,15 @@ Notebook 6: Maximum Feature Engineering
 ├── MRP Binning
 ├── Interaction Features
 └── K-Fold Target Encoding
+
+Notebook 7: Target Log transform
+├── Transform Target to log
+├── Handle skewed target data distribution
+
+Notebook 8: XGB Model
+├── Use XGB model
+
+
 ```
 
 ---
@@ -454,6 +539,8 @@ BigMartSales_2 establishes a reproducible baseline (1082.58 RMSE) for comparison
 | v2 | BigMartSales_3 | Refined baseline | Iterative improvement |
 | v3 | BigMartSales_4 | Advanced features | Enhanced features |
 | v4 | BigMartSales_5/6 | Optimization + Advanced FE | Latest strategy |
+| v5 | BigMartSales_7 | Target Log transform | Not better than v4 |
+| v6 | BigMartSales_8 | XGBoost | Not the best
 
 ---
 
@@ -462,9 +549,8 @@ BigMartSales_2 establishes a reproducible baseline (1082.58 RMSE) for comparison
 1. **Ensemble Methods:** Combine predictions from multiple notebooks
 2. **Feature Selection:** Apply systematic feature importance analysis
 3. **Advanced Encoding:** Explore other target encoding variants
-4. **Cross-model Validation:** Compare with XGBoost, LightGBM, or Neural Networks
 5. **Domain Features:** Leverage business logic for feature creation
-6. **Stacking:** Create meta-models combining predictions from Notebooks 5 & 6
+
 
 ---
 
