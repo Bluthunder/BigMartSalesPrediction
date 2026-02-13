@@ -50,7 +50,7 @@ BigMartSalesPrediction/
 └── .gitignore
 ```
 
-## 🔍 Dataset Overview
+## Dataset Overview
 
 ### Features
 
@@ -78,7 +78,7 @@ BigMartSalesPrediction/
 - **Missing Values:** Item_Weight, Outlet_Size
 - **Data Type:** Mix of numerical and categorical features
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 ```bash
@@ -112,7 +112,7 @@ jupyter notebook Notebooks/
 python Py/bigmartsales_6\(fe\).py
 ```
 
-## 📊 Notebooks Guide
+## Notebooks Guide
 
 ### Phase 1: Exploratory Data Analysis & Model Comparison
 **Notebook:** `Analysis_Notebook1.ipynb`
@@ -187,7 +187,7 @@ python Py/bigmartsales_6\(fe\).py
 
 
 
-## 🔧 Key Techniques & Strategies
+## Key Techniques & Strategies
 
 ### Data Preprocessing
 1. **Missing Item_Weight:** Imputed with median weight by Item_Type
@@ -229,7 +229,7 @@ python Py/bigmartsales_6\(fe\).py
 - GroupKFold for stratified evaluation
 - Consistent random state for reproducibility
 
-## 📈 Performance Evolution
+## Performance Evolution
 
 | Version | Notebook | Approach | CV RMSE | Key Feature |
 |---------|----------|-------------------------------|---------|-----------------------------|
@@ -241,7 +241,7 @@ python Py/bigmartsales_6\(fe\).py
 | v6 | BigMartSales_7(Log) | Log-Target + Optuna + MLflow | 1157   | Log-target transformation, robust FE |
 | v7 | BigMartSales_v8(XGB) | XGBoost + Staged Optuna + MLflow | 1098.66 | Staged Optuna, XGBoost, advanced FE |
 
-## 🎯 Model Performance Insights
+## Model Performance Insights
 
 **Algorithm Comparison Results (Analysis_Notebook1):**
 - Linear Regression: ~1065 RMSE
@@ -268,7 +268,7 @@ python Py/bigmartsales_6\(fe\).py
 - GradientBoosting provides optimal performance-stability tradeoff for this regression problem
 - Consider ensemble methods combining insights from multiple algorithms for potential improvements
 
-## 📚 Tools & Libraries
+## Tools & Libraries
 
 | Tool | Purpose | Version |
 |------|---------|---------|
@@ -281,7 +281,7 @@ python Py/bigmartsales_6\(fe\).py
 | **MLflow** | Experiment tracking | Latest |
 | **Jupyter** | Interactive notebooks | Latest |
 
-## 🔄 Workflow
+## Workflow
 
 1. **Data Loading & EDA** → Analysis_Notebook1
 2. **Baseline Model** → BigMartSales_2
@@ -290,7 +290,7 @@ python Py/bigmartsales_6\(fe\).py
 5. **Advanced Feature Engineering** → BigMartSales_6
 6. **Generate Predictions** → Submission CSVs
 
-## 📝 Running Experiments
+## Running Experiments
 
 ### Using MLflow
 
@@ -330,7 +330,7 @@ study = optuna.create_study(direction="minimize")
 study.optimize(objective, n_trials=100)
 ```
 
-## 🎓 Learning Outcomes
+## Learning Outcomes
 
 This project demonstrates:
 1. ✅ Complete ML pipeline from data exploration to deployment
@@ -341,11 +341,11 @@ This project demonstrates:
 6. ✅ Iterative model improvement and refinement
 7. ✅ Regression problem solving with tree-based models
 
-## 📋 Detailed Documentation
+## Detailed Documentation
 
 For an in-depth comparison of all notebooks and their strategies, see [NOTEBOOKS_COMPARISON.md](NOTEBOOKS_COMPARISON.md).
 
-## 💡 Key Insights
+## Key Insights
 
 1. **Data Quality Matters:** Proper missing value imputation and normalization significantly impact performance
 2. **Feature Engineering Trumps Tuning:** Advanced features (K-Fold Target Encoding) proved more valuable than hyperparameter optimization
@@ -353,14 +353,14 @@ For an in-depth comparison of all notebooks and their strategies, see [NOTEBOOKS
 4. **Iterative Approach:** Progressive refinement through 6 notebooks led to the most mature solution
 5. **Model Stability:** Consistent RMSE around 1082-1084 indicates robust baseline
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - [ ] Ensemble methods combining multiple model types
 - [ ] Systematic feature selection and importance analysis
 - [ ] Stacking meta-models for improved predictions
 - [ ] Domain-specific feature engineering
 
-## 📄 License
+## License
 
 This project is part of a data science learning initiative.
 
